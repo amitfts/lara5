@@ -42,7 +42,7 @@
             ga('send', 'pageview');
 
         </script>
-       
+
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -94,6 +94,18 @@
                 </div>
             </div>
         </nav>
+        <div class="container">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- sameroute header -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-7284429834526337"
+                 data-ad-slot="3890506342"
+                 data-ad-format="auto"></ins>
+            <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
         @yield('content')
         <footer class="footer">
             <div class="container">

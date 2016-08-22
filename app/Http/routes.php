@@ -23,7 +23,7 @@ Route::get('my-carpools', 'CarpoolController@mypools');
 Route::get('from-{from}-to-{to}', 'HomeController@fromToLocation');
 Route::get('carpool-from-{from}-to-{to}', 'HomeController@fromToLocation');
 Route::get('carpool-from-{from}/to-{to}', 'HomeController@fromToLocation');
-Route::get('carpool-from-{from}', 'HomeController@fromLocation');
+Route::get('carpool-from-{from}', 'HomeController@inLocation');
 Route::get('in-{locality}', 'HomeController@inLocation');
 Route::get('carpool-in-{locality}', 'HomeController@inLocation');
 Route::get('details-{carpoolId}-from-{from}-to-{to}', 'HomeController@details');

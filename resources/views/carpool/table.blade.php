@@ -52,4 +52,8 @@
         @endforeach
         @endif
     </tbody>
+    <tfoot>
+        {!! $carpools->render() !!}
+    </tfoot>
+    
 </table>

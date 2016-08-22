@@ -36,7 +36,7 @@ class HomeController extends Controller {
      */
     public function index() {
         $locations = Location::get();
-        $carpools = Carpool::orderBy('id', 'desc')->limit(20)->get();
+        $carpools = Carpool::orderBy('id', 'desc')->paginate(20);
         $view = [
             'title' => 'Carpooling rideshare ',
             'metaKey' => "",
@@ -125,7 +125,7 @@ class HomeController extends Controller {
             $carpools = Carpool::where('from_location_id', $fromLoc->id)
                     ->where('to_location_id', $toLoc->id)
                     ->orderBy('id', 'desc')
-                    ->get();
+                    ->paginate(20);
             $strFrmTo = 'from ' . $fromLoc->getFinalLocality() . ' to ' . $toLoc->getFinalLocality();
             $view = [
                 'title' => 'Carpool ' . $strFrmTo,
@@ -183,7 +183,7 @@ class HomeController extends Controller {
             $carpools = Carpool::where('from_location', 'like', '%' . $from . '%')
                     ->where('to_location', 'like', '%' . $to . '%')
                     ->orderBy('id', 'desc')
-                    ->get();
+                    ->paginate(20);;
             $view['carpools'] = $carpools;
             $view['from'] = $from;
             $view['to'] = $to;

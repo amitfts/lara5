@@ -104,7 +104,7 @@ class CarpoolController extends Controller {
         if ($carpoolCount == 0) {
             return redirect('new-carpool');
         }
-        $carpools = Carpool::where('user_id', $userId)->orderBy('id', 'desc')->get();
+        $carpools = Carpool::where('user_id', $userId)->orderBy('id', 'desc')->paginate(10);
         $view = [
             'title' => 'My Carpool',
             'metaKey' => 'My Carpools',
