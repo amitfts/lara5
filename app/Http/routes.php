@@ -16,6 +16,9 @@ Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
 ]);
+Route::get('social/login/redirect/{provider}', ['uses' => 'Auth\AuthController@redirectToProvider', 'as' => 'social.login']);
+Route::get('social/login/{provider}', 'Auth\AuthController@handleProviderCallback');
+
 Route::get('search', 'HomeController@search');
 Route::get('new-carpool', 'CarpoolController@create');
 Route::post('new-carpool', 'CarpoolController@postcreate');
@@ -35,3 +38,5 @@ Route::get('home', 'CarpoolController@mypools');
 Route::get('test', 'HomeController@test');
 Route::get('contact-us', 'HomeController@contact');
 Route::post('contact-us', 'HomeController@postContact');
+Route::get('terms-and-conditions', 'HomeController@terms');
+Route::get('cities', 'HomeController@cities');

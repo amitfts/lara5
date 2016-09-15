@@ -54,6 +54,8 @@
 								<button type="submit" class="btn btn-primary">
 									Register
 								</button>
+                                                            or 
+                                                            <a href="{{ route('social.login', ['google']) }}"><img src="/images/register-google.png" alt="Register with google" /></a>
 							</div>
 						</div>
 					</form>

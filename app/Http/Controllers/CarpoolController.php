@@ -119,7 +119,7 @@ class CarpoolController extends Controller {
         $locationArr = explode(', ', $location);
         array_pop($locationArr); //Removing country
         array_pop($locationArr); //Removing State
-        $updatedLocation = implode(', ', $locationArr);
+        $updatedLocation = implode('-', $locationArr);
         return $updatedLocation;
     }
 

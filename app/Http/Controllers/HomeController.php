@@ -34,14 +34,18 @@ class HomeController extends Controller {
      *
      * @return Response
      */
-    public function index() {
-        $locations = Location::get();
+    public function index(Request $request) {
         $carpools = Carpool::orderBy('id', 'desc')->paginate(20);
+        $page = trim($request->get('page'));
+        $extraTitle = '';
+        if($page>1){
+            $first = $carpools->first();
+            $extraTitle = $first->from_location.' to '.$first->to_location.' at page '.$page;
+        }
         $view = [
-            'title' => 'Carpooling rideshare ',
-            'metaKey' => "",
-            'metaDesc' => 'Save petrol and money by carpooling in sameroute.in',
-            'locations' => $locations,
+            'title' => 'Carpooling rideshare '.$extraTitle,
+            'metaKey' => "sameroute, Carpool, rideshare",
+            'metaDesc' => 'Search and share carpool rideshare ',
             'carpools' => $carpools
         ];
         return view('home', $view);
@@ -146,17 +150,10 @@ class HomeController extends Controller {
             $strFrmTo = str_replace(',', '-', 'from ' . $carpool->from_location . ' to ' . $carpool->to_location);
             $name = $carpool->user->name;
             $key = '';
-            if ($carpool->regpart2 == null || $carpool->regpart2 == 0) {
-                $key = 'Regular';
-            } elseif ($carpool->regpart2 % 2 === 1) {
-                $key = 'Odd';
-            } else {
-                $key = 'Even';
-            }
-
+           
             $view = [
-                'title' => $key . ' carpool ' . $strFrmTo . ' ' . $carpool->id,
-                'metaKey' => 'carpool ' . $strFrmTo . 'by ' . $name . ', rideshare ' . $strFrmTo . ', ',
+                'title' => 'Carpool ' . $strFrmTo . ' ' . $carpool->id,
+                'metaKey' => 'carpool ' . $strFrmTo . ' by ' . $name . ', rideshare ' . $strFrmTo . ', ',
                 'metaDesc' => $carpool->details,
                 'carpool' => $carpool
             ];
@@ -273,5 +270,19 @@ class HomeController extends Controller {
         $endTime = time();
         echo "Total time spend is :" . ($endTime - $startTime);
     }
-
+    
+    public function terms() {
+        return view('carpool.terms', []);
+    }
+    
+     public function cities() {
+        $locations = Location::get();
+        $view = [
+            'title' => 'Cities where Carpooling rideshare available',
+            'metaKey' => "sameroute, carpool cities ",
+            'metaDesc' => 'Save petrol and money by carpooling in sameroute.in',
+            'locations' => $locations
+        ];
+        return view('carpool.cities', $view);
+    }
 }

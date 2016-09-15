@@ -1,5 +1,4 @@
 @extends('app')
-
 @section('content')
  <div id="fb-root"></div>
         <script>(function (d, s, id) {
@@ -87,19 +86,25 @@
                          @if (Auth::guest())
                          <div class="row" style="margin-bottom: 15px;">
                             <div class="col-md-8">
-                                <a href="{{ url('/auth/login') }}">Login</a> or <a href="{{ url('/auth/register') }}">Signup</a> to see the contact details and create your own carpool.
+                                <a href="{{ url('/auth/login') }}">Login</a> or <a href="{{ url('/auth/register') }}">Signup</a> to see the contact details and create your own carpool and ridshare.
                             </div>
-                            
                         </div>
                          @else
                         <div class="row" style="margin-bottom: 15px;">
                             <div class="col-md-3">
-                                Contact me for the above carpool:
+                                Email:
                             </div>
                             <div class="col-md-3" itemprop="email">{{$carpool->user->email}}</div>
                         </div>
                          @endif
-                         @if(Auth::check() && $carpool->user->id!=Auth::user()->id )
+                         <div class="row" style="margin-bottom: 15px;">
+                            <div class="col-md-3">
+                                Posted at:
+                            </div>
+                            <div class="col-md-3" >{{$carpool->created_at}}</div>
+                        </div>
+                        
+                        @if(Auth::check() && $carpool->user->id!=Auth::user()->id )
                          <div class="row" style="margin-bottom: 15px;">
                             <div class="col-md-8">
                                 Create your own carpool and share it to let other know about it.

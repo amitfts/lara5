@@ -48,6 +48,10 @@
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								<button type="submit" class="btn btn-primary">Login</button>
+                                                                or 
+                                                                <!--<a class="btn btn-primary" href="{{ route('social.login', ['facebook']) }}">Facebook</a>
+                                                                 or -->
+                                                                <a href="{{ route('social.login', ['google']) }}"><img src="/images/login-google.png" alt="Login with google" /></a>
 
 								<a class="btn btn-link" href="{{ url('/password/email') }}">Forgot Your Password?</a>
 							</div>

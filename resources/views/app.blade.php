@@ -5,8 +5,8 @@
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description"  content="@if(isset($metaDesc)){{$metaDesc}}@endif Carpool, rideshare, odd even carpool in sameroute.in. " />
-        <meta name="keywords"  content="@if(isset($metaKey)){{$metaKey}}@endif odd even, rideshare, carpooling, sameroute" />
+        <meta name="description"  content="@if(isset($metaDesc)){{$metaDesc}}@endif" />
+        <meta name="keywords"  content="@if(isset($metaKey)){{$metaKey}}@endif" />
         <meta property="og:url" content="{{Request::url()}}" />
         <meta property="og:type" content="website" />
         <meta property="fb:app_id" content="994531767281439" />
@@ -64,6 +64,12 @@
                             <a href="{{ url('/search') }}" >Search</a>
                         </li>
                         <li>
+                            <a href="{{ url('/cities') }}" >Cities</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('/terms-and-conditions') }}" title="Term and conditions">Terms</a>
+                        </li>
+                        <li>
                             <a href="{{ url('/contact-us') }}" >Contact Us</a>
                         </li>
 
@@ -94,22 +100,11 @@
                 </div>
             </div>
         </nav>
-        <div class="container">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <!-- sameroute header -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-7284429834526337"
-                 data-ad-slot="3890506342"
-                 data-ad-format="auto"></ins>
-            <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
         @yield('content')
         <footer class="footer">
             <div class="container">
-                <p class="text-muted">&copy {{date('Y')}} sameroute.in </p>
+                <p class="text-muted">&copy; {{date('Y')}} sameroute.in </p>
+              
             </div>
         </footer>
         <!-- Scripts -->
