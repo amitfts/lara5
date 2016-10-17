@@ -39,11 +39,7 @@
                     <ul>
                     @foreach($toLoc as $loc)
                     <li class="col-md-6 home-locations">
-                        @if(in_array($loc->locality, config('carpool.distLocalities')))
-                        <a href="{{url('/carpool-from-'.$loc->district.'/to-'.$location->getFinalLocality())}}" title="Carpool from {{$location->getFinalLocality()}} to {{$loc->district}}">{{$loc->district}}</a>   
-                        @else
-                        <a href="{{url('/carpool-from-'.$loc->locality.'/to-'.$location->getFinalLocality())}}" title="Carpool from {{$location->locality}} to {{$loc->locality}}">{{$loc->locality}}</a>   
-                        @endif
+                        <a href="{{url('/carpool-from-'.$loc->locality.'/to-'.$location->getFinalLocality())}}" title="Carpool from {{$loc->locality}} to {{$location->locality}}">{{$loc->locality}}</a>
                     </li>
                     @endforeach()
                     </ul>

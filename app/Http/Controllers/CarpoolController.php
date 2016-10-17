@@ -43,8 +43,6 @@ class CarpoolController extends Controller {
             }else{
                 $fromLocation = Location::where('locality',$request->get('fromcity'))->first();
             }
-            
-            
             $toLocArr = ['locality' => $request->get('tocity'),
                 'district' => $request->get('todist'), 'state' => $request->get('tostate')];
             if(Location::where('locality',$request->get('tocity'))->count()==0){
@@ -113,6 +111,13 @@ class CarpoolController extends Controller {
             'me' => 1
         ];
         return view('carpool.list', $view);
+    }
+    
+    public function delete($id){
+        $id= (int)$id;
+        $userId = Auth::id();
+        Carpool::where(['id'=>$id,'user_id'=> $userId])->delete();
+        return redirect('my-carpools');
     }
 
     public function refineLocation($location) {

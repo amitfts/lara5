@@ -99,9 +99,12 @@
                          @endif
                          <div class="row" style="margin-bottom: 15px;">
                             <div class="col-md-3">
-                                Posted at:
+                                Carpool created at:
                             </div>
-                            <div class="col-md-3" >{{$carpool->created_at}}</div>
+                            <div class="col-md-3" >{{date('h:i A',strtotime($carpool->created_at))}} on {{date('d-M-Y',strtotime($carpool->created_at))}}</div>
+                            @if(Auth::check() &&  $carpool->user->id==Auth::id())
+                            <div class="col-md-3"><a href="/delete-{{$carpool->id}}" class="btn btn-danger">Delete</a></div>
+                            @endif
                         </div>
                         
                         @if(Auth::check() && $carpool->user->id!=Auth::user()->id )
