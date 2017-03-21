@@ -180,7 +180,7 @@ class HomeController extends Controller {
             $carpools = Carpool::where('from_location', 'like', '%' . $from . '%')
                     ->where('to_location', 'like', '%' . $to . '%')
                     ->orderBy('id', 'desc')
-                    ->paginate(20);;
+                    ->paginate(20);
             $view['carpools'] = $carpools;
             $view['from'] = $from;
             $view['to'] = $to;
@@ -284,5 +284,42 @@ class HomeController extends Controller {
             'locations' => $locations
         ];
         return view('carpool.cities', $view);
+    }
+    function sitemap() {
+        $locations = Location::get();
+        $locationStr ='';
+        foreach($locations as $loc){
+            $carpool = Carpool::where('from_location_id',$loc->id)->orWhere('to_location_id',$loc->id)->orderBy('id', 'desc')->first();
+            if($carpool){
+                $locationStr .= "<url>
+                <loc>http://www.sameroute.in/from-{$loc->locality}</loc>
+                <lastmod>".  substr($carpool->created_at, 0,10)."</lastmod>
+                <changefreq>weekly</changefreq>
+                <priority>.8</priority>
+            </url>
+            ";
+            }
+        }
+        foreach($locations as $loc){
+            foreach($locations as $loc1){
+                $carpool = Carpool::where('from_location_id',$loc->id)->Where('to_location_id',$loc1->id)->orderBy('id', 'desc')->first();
+                if($carpool){
+                    $locationStr .= "<url>
+                    <loc>http://www.sameroute.in/carpool-from-{$loc->locality}/to-{$loc1->locality}</loc>
+                    <lastmod>".  substr($carpool->created_at, 0,10)."</lastmod>
+                    <changefreq>weekly</changefreq>
+                    <priority>.7</priority>
+                </url>
+                ";
+                }
+            }
+        }
+        $carpool = Carpool::orderBy('id', 'desc')->first();
+        $view = [
+            'homepage_last_modified'=>substr($carpool->created_at, 0,10),
+            'locations'=>$locationStr,
+            'xmlStart'=>"<?xml version='1.0' encoding='UTF-8'?>"
+        ];
+        return view('carpool.sitemap', $view);
     }
 }

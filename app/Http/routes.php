@@ -41,3 +41,4 @@ Route::post('contact-us', 'HomeController@postContact');
 Route::get('terms-and-conditions', 'HomeController@terms');
 Route::get('cities', 'HomeController@cities');
 Route::get('delete-{carpoolId}', 'CarpoolController@delete');
+Route::get('sitemap.xml', 'HomeController@sitemap');

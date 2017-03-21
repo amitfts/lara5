@@ -9,16 +9,16 @@
                     <h1>Popular cities for Carpool</h1>
                 </div>
                 <div class="panel-body">
-                    <div class="col-lg-3 col-md-4 col-sm-6   col-xs-12   home-locations" itemscope="" itemtype="http://schema.org/Place">
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8   home-locations" itemscope="" itemtype="http://schema.org/Place">
                         <a href="http://www.sameroute.in/carpool-from-Greater%20Noida" title="Carpool from Greater Noida"><span itemprop="name">Greater Noida</span></a>
                     </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6   col-xs-6  home-locations" itemscope="" itemtype="http://schema.org/Place">
+                    <div class="col-lg-3 col-md-4 col-sm-6   col-xs-4  home-locations" itemscope="" itemtype="http://schema.org/Place">
                         <a href="http://www.sameroute.in/carpool-from-Noida" title="Carpool from Noida"><span itemprop="name">Noida</span></a>
                     </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6   col-xs-6  home-locations" itemscope="" itemtype="http://schema.org/Place">
+                    <div class="col-lg-3 col-md-4 col-sm-6   col-xs-5  home-locations" itemscope="" itemtype="http://schema.org/Place">
                         <a href="http://www.sameroute.in/carpool-from-Ghaziabad" title="Carpool from Ghaziabad"><span itemprop="name">Ghaziabad</span></a>
                     </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6   col-xs-12   home-locations" itemscope="" itemtype="http://schema.org/Place">
+                    <div class="col-lg-3 col-md-4 col-sm-6   col-xs-7   home-locations" itemscope="" itemtype="http://schema.org/Place">
                         <a href="http://www.sameroute.in/carpool-from-New%20Delhi" title="Carpool from New Delhi"><span itemprop="name">New Delhi</span></a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6   col-xs-6  home-locations" itemscope="" itemtype="http://schema.org/Place">

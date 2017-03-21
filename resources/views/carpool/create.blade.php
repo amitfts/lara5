@@ -95,6 +95,7 @@
                             <div class="col-md-6">
                                 <textarea name="details" rows="4" class="form-control" required></textarea>
                             </div>
+                            <div class="col-md-3" style="margin-top: 30px;">Insert all locations in route.</div>
                         </div>
 
                         <div class="form-group">

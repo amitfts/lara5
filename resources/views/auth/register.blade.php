@@ -50,12 +50,12 @@
 						</div>
 
 						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<button type="submit" class="btn btn-primary">
+							<div class="col-md-8 col-md-offset-4">
+								<button type="submit" class="btn btn-primary col-md-3 col-sm-4 col-xs-12">
 									Register
 								</button>
-                                                            or 
-                                                            <a href="{{ route('social.login', ['google']) }}"><img src="/images/register-google.png" alt="Register with google" /></a>
+                                                            <span class="col-md-1 col-sm-2 col-xs-12">  or </span>
+                                                            <a href="{{ route('social.login', ['google']) }}" class="col-md-4 col-sm-5 col-xs-12"><img src="/images/register-google.png" alt="Register with google" /></a>
 							</div>
 						</div>
 					</form>

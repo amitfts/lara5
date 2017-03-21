@@ -5,8 +5,8 @@
             <th>To</th>
             <th>Start Time</th>
             <th>Return Time</th>
-            <th>Even/Odd</th>
             <th>Driver/Passenger</th>
+            <th>Posted By</th>
         </tr>
     </thead>
     <tbody>
@@ -19,9 +19,21 @@
             </td>
 
             <td itemprop="startTime" @if($car->journey_date) colspan="2" @endif>{{date('h:i A',strtotime($car->start_time))}} {{$car->journey_date}}</td>
-
             @if(!$car->journey_date) <td itemprop="endTime"> {{date('h:i A',strtotime($car->return_time))}} </td> @endif
-            <td><?php
+            
+            <td >
+
+                
+                    @if($car->user_type=='D')
+                    Driver
+                    @elseif($car->user_type=='P')
+                    Passenger
+                    @else
+                    Both
+                    @endif
+                
+            </td>
+            <?php
                 $key = '';
                 if ($car->pool_type == 'O') {
                     $key = 'onetime';
@@ -34,18 +46,8 @@
                     $keyMsg = $key = 'even';
                 }
                 ?>
-                {{ucfirst($keyMsg)}}
-            </td>
-            <td >
-
-                <a href="{{url('/'.$key.'-carpool-'. $car->id.'-from-'.urlencode(str_replace('-','_',strtolower($car->from_location))).'-to-'.urlencode(str_replace('-','_',strtolower($car->to_location))))}}" title="{{$key}} carpool from {{$car->from_location}} to {{$car->to_location}}" itemprop="name">
-                    @if($car->user_type=='D')
-                    Driver
-                    @elseif($car->user_type=='P')
-                    Passenger
-                    @else
-                    Both
-                    @endif
+            <td><a href="{{url('/'.$key.'-carpool-'. $car->id.'-from-'.urlencode(str_replace('-','_',strtolower($car->from_location))).'-to-'.urlencode(str_replace('-','_',strtolower($car->to_location))))}}" title="{{$key}} carpool from {{$car->from_location}} to {{$car->to_location}}" itemprop="name">
+                {{$car->user->name}}
                 </a>
             </td>
         </tr>
