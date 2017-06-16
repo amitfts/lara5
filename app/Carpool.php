@@ -20,7 +20,8 @@ class Carpool extends Model {
      */
     protected $fillable = ['start_time', 'return_time','user_id','from_location',
         'from_location_id','to_location', 'to_location_id', 'details','regpart1',
-        'regpart2','user_type','pool_type','journey_date','price'];
+        'regpart2','user_type','pool_type','journey_date','price',
+        'from_lat','from_lng','to_lat', 'to_lng'];
     public function user(){
          return $this->belongsTo('App\User', 'user_id');
     }
@@ -32,6 +33,5 @@ class Carpool extends Model {
     public function toLocation(){
          return $this->belongsTo('App\Location', 'to_location_id');
     }
-    
-    
+  
 }

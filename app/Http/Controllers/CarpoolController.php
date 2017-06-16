@@ -57,8 +57,13 @@ class CarpoolController extends Controller {
                 'user_id' => Auth::id(),
                 'from_location_id' => $fromLocation->id,
                 'from_location' => $this->refineLocation($request->get('fromtxt')),
+                'from_lat'=>$request->get('fromlat'),
+                'from_lng'=>$request->get('fromlng'),
                 'to_location_id' => $toLocation->id,
                 'to_location' => $this->refineLocation($request->get('totxt')),
+                'to_lat'=>$request->get('tolat'),
+                'to_lng'=>$request->get('tolng'),
+                
                 'details' => $request->get('details'),
                 'user_type' => $request->get('user_type')
             ];
