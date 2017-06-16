@@ -24,11 +24,12 @@
                         <div class="form-group">
                             <label class="col-md-3 control-label">From :</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" id="fromtxt" name="fromtxt" onFocus="geolocate()" required />
+                                <input type="text" class="form-control" id="fromtxt" name="fromtxt"  required />
                                 <input type="hidden" id="fromlocality" name="fromcity" />
                                 <input type="hidden" id="fromadministrative_area_level_2" name="fromdist" />
                                 <input type="hidden" id="fromadministrative_area_level_1" name="fromstate" />
-
+                                <input type="hidden" id="fromlat" name="fromlat" />
+                                <input type="hidden" id="fromlng" name="fromlng" />
                             </div>
                         </div>
 
@@ -39,7 +40,8 @@
                                 <input type="hidden" id="tolocality" name="tocity" />
                                 <input type="hidden" id="toadministrative_area_level_2" name="todist" />
                                 <input type="hidden" id="toadministrative_area_level_1" name="tostate" />
-
+                                <input type="hidden" id="tolat" name="tolat" />
+                                <input type="hidden" id="tolng" name="tolng" />
                             </div>
                         </div>
                          <div class="form-group">
@@ -152,15 +154,15 @@
     function fillInAddress() {
         // Get the place details from the autocomplete object.
         var place = autocomplete.getPlace();
-
-        // Get each component of the address from the place details
-        // and fill the corresponding field on the form.
+      
+        $('#fromlat').val(place.geometry.location.lat());
+        $('#fromlng').val(place.geometry.location.lng());
         for (var i = 0; i < place.address_components.length; i++) {
             var addressType = place.address_components[i].types[0];
             if (componentForm[addressType]) {
                 var val = place.address_components[i][componentForm[addressType]];
                 //console.log(addressType + ':' + val);
-                $('#from' + addressType).val(val)
+                $('#from' + addressType).val(val);
             }
         }
     }
@@ -168,7 +170,8 @@
     function fillInAddress2() {
         // Get the place details from the autocomplete object.
         var place = autocomplete2.getPlace();
-
+        $('#tolat').val(place.geometry.location.lat());
+        $('#tolng').val(place.geometry.location.lng());
         // Get each component of the address from the place details
         // and fill the corresponding field on the form.
         for (var i = 0; i < place.address_components.length; i++) {
@@ -176,7 +179,7 @@
             if (componentForm[addressType]) {
                 var val = place.address_components[i][componentForm[addressType]];
                 // console.log(addressType + ':' + val);
-                $('#to' + addressType).val(val)
+                $('#to' + addressType).val(val);
             }
         }
     }
@@ -188,21 +191,7 @@
 // [START region_geolocation]
 // Bias the autocomplete object to the user's geographical location,
 // as supplied by the browser's 'navigator.geolocation' object.
-    function geolocate() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                var geolocation = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
-                var circle = new google.maps.Circle({
-                    center: geolocation,
-                    radius: position.coords.accuracy
-                });
-                autocomplete.setBounds(circle.getBounds());
-            });
-        }
-    }
+   
 // [END region_geolocation]
 
     function validateCarpool() {
@@ -245,7 +234,7 @@
         }
     }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?signed_in=true&libraries=places&callback=initAutocomplete"
+<script src="https://maps.googleapis.com/maps/api/js?signed_in=true&libraries=places&callback=initAutocomplete&key=AIzaSyCy9tzYYCoylo9exAox9v-mzD4oOkvQh98"
         async defer>
 </script>
 
