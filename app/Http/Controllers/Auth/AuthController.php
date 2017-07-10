@@ -39,7 +39,7 @@ class AuthController extends Controller {
 		$this->middleware('guest', ['except' => 'getLogout']);
 	}
         
-    public function redirectToProvider($provider)
+        public function redirectToProvider($provider)
     {
         return Socialite::driver($provider)->redirect();
     }
@@ -47,7 +47,7 @@ class AuthController extends Controller {
     public function handleProviderCallback($provider)
     {
      //notice we are not doing any validation, you should do it
-
+        
         $user = Socialite::driver($provider)->user();
          
         // stroing data to our use table and logging them in

@@ -193,3 +193,33 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `remember_token`, `creat
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+SELECT *,
+(6371 * acos( cos( radians(Sx1) ) * cos( radians( from_lat ) ) * cos( radians( Sy1 ) - radians(from_lng) ) + sin( radians(Sx1) ) * sin( radians(from_lat) ) )) AS d1,
+(6371 * acos( cos( radians(Sx1) ) * cos( radians( to_lat) ) * cos( radians( Sy1 ) - radians(to_lng) ) + sin( radians(Sx1) ) * sin( radians(to_lat) ) )) AS d2,
+(6371 * acos( cos( radians(to_lat) ) * cos( radians( from_lat ) ) * cos( radians( to_lng ) - radians(from_lng) ) + sin( radians(to_lat) ) * sin( radians(from_lat) ) )) AS a,
+(6371 * acos( cos( radians(Sx2) ) * cos( radians( from_lat ) ) * cos( radians( Sy2 ) - radians(from_lng) ) + sin( radians(Sx2) ) * sin( radians(from_lat) ) )) AS d3,
+(6371 * acos( cos( radians(Sx2) ) * cos( radians( to_lat) ) * cos( radians( Sy2 ) - radians(to_lng) ) + sin( radians(Sx2) ) * sin( radians(to_lat) ) )) AS d4
+FROM  `carpools` 
+Having (
+( d1+ d2) < ( 2 * a) 
+AND
+(d3 + d4) < ( 2 * a)
+and 
+(d1 < d3)
+)
+ 
+order by (d1+d4)
+
+
+
+
+
+
+SELECT *, (6371 * acos( cos( radians(28.4743879) ) * cos( radians( from_lat ) ) * cos( radians( 77.50399040000002 ) - radians(from_lng) ) + sin( radians(28.4743879) ) * sin( radians(from_lat) ) )) AS d1,
+(6371 * acos( cos( radians(28.4743879) ) * cos( radians( to_lat) ) * cos( radians( 77.50399040000002 ) - radians(to_lng) ) + sin( radians(28.4743879) ) * sin( radians(to_lat) ) )) AS d2, 
+(6371 * acos( cos( radians(to_lat) ) * cos( radians( from_lat ) ) * cos( radians( to_lng ) - radians(from_lng) ) + sin( radians(to_lat) ) * sin( radians(from_lat) ) )) AS a, 
+(6371 * acos( cos( radians(28.55033139999999) ) * cos( radians( from_lat ) ) * cos( radians( 77.25018929999999 ) - radians(from_lng) ) + sin( radians(28.55033139999999) ) * sin( radians(from_lat) ) )) AS d3,
+(6371 * acos( cos( radians(28.55033139999999) ) * cos( radians( to_lat) ) * cos( radians( 77.25018929999999 ) - radians(to_lng) ) + sin( radians(28.55033139999999) ) * sin( radians(to_lat) ) )) AS d4
+FROM `carpools` 
+Having ( ( d1+ d2) < ( 2 * a) AND (d3 + d4) < ( 2 * a) and (d1 < d3) ) order by (d1+d4) limit 40

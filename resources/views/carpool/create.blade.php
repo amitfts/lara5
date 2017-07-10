@@ -94,10 +94,10 @@
                         
                         <div class="form-group">
                             <label class="col-md-3 control-label">Description:</label>
-                            <div class="col-md-6">
+                            <div class="col-md-9">
                                 <textarea name="details" rows="4" class="form-control" required></textarea>
                             </div>
-                            <div class="col-md-3" style="margin-top: 30px;">Insert all locations in route.</div>
+                            
                         </div>
 
                         <div class="form-group">

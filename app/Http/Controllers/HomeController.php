@@ -38,12 +38,12 @@ class HomeController extends Controller {
         $carpools = Carpool::orderBy('id', 'desc')->paginate(20);
         $page = trim($request->get('page'));
         $extraTitle = '';
-        if($page>1){
+        if ($page > 1) {
             $first = $carpools->first();
-            $extraTitle = $first->from_location.' to '.$first->to_location.' at page '.$page;
+            $extraTitle = $first->from_location . ' to ' . $first->to_location . ' at page ' . $page;
         }
         $view = [
-            'title' => 'Carpooling rideshare '.$extraTitle,
+            'title' => 'Carpooling rideshare ' . $extraTitle,
             'metaKey' => "sameroute, Carpool, rideshare",
             'metaDesc' => 'Search and share carpool rideshare ',
             'carpools' => $carpools
@@ -53,7 +53,7 @@ class HomeController extends Controller {
 
     public function fromLocation($locality) {
         $locCount = $location = Location::where('locality', $locality)->count();
-        if ($locCount ==1) {
+        if ($locCount == 1) {
             $location = Location::where('locality', $locality)->first();
         } else {
             $location = Location::where('district', $locality)->first();
@@ -146,11 +146,11 @@ class HomeController extends Controller {
 
     public function details($carpoolId, $from, $to) {
         $carpool = Carpool::find($carpoolId);
-        if ($carpool && strtolower($carpool->from_location) == urldecode(str_replace('_','-',$from))) {
+        if ($carpool && strtolower($carpool->from_location) == urldecode(str_replace('_', '-', $from))) {
             $strFrmTo = str_replace(',', '-', 'from ' . $carpool->from_location . ' to ' . $carpool->to_location);
             $name = $carpool->user->name;
             $key = '';
-           
+
             $view = [
                 'title' => 'Carpool ' . $strFrmTo . ' ' . $carpool->id,
                 'metaKey' => 'carpool ' . $strFrmTo . ' by ' . $name . ', rideshare ' . $strFrmTo . ', ',
@@ -166,24 +166,51 @@ class HomeController extends Controller {
     public function search(Request $request) {
         $from = trim($request->get('from'));
         $to = trim($request->get('to'));
+        $fromlat = trim($request->get('fromlat'));
+        $fromlng = trim($request->get('fromlng'));
+        $tolat = trim($request->get('tolat'));
+        $tolng = trim($request->get('tolng'));
+
         $view = [
             'title' => 'Carpool Search',
             'metaKey' => 'Search Carpool and people on same route, ',
             'metaDesc' => 'Search carpool and people who are traveling in same route. ',
         ];
-        if ($from && $to && strlen($from) > 2 && strlen($to) > 2) {
+
+
+        if (filter_var($fromlat, FILTER_VALIDATE_FLOAT) &&
+                filter_var($fromlng, FILTER_VALIDATE_FLOAT) &&
+                filter_var($tolat, FILTER_VALIDATE_FLOAT) &&
+                filter_var($tolng, FILTER_VALIDATE_FLOAT)) {
             $view = [
                 'title' => 'Carpool Search from ' . $from . ' to ' . $to,
-                'metaKey' => 'Search Carpool and people in sameroute ' . $from . ' to ' . $to . ', ',
-                'metaDesc' => 'Search carpool and people who are traveling in same route ' . $from . ' to ' . $to . '. ',
+                'metaKey' => 'Carpool from ' . $from . ' to ' . $to . ', ',
+                'metaDesc' => 'People who are travel from ' . $from . ' to ' . $to . ' or near by locations. ',
             ];
-            $carpools = Carpool::where('from_location', 'like', '%' . $from . '%')
-                    ->where('to_location', 'like', '%' . $to . '%')
-                    ->orderBy('id', 'desc')
-                    ->paginate(20);
+        $q= "SELECT *,
+(6371 * acos( cos( radians($fromlat) ) * cos( radians( from_lat ) ) * cos( radians( $fromlng ) - radians(from_lng) ) + sin( radians($fromlat) ) * sin( radians(from_lat) ) )) AS d1,
+(6371 * acos( cos( radians($fromlat) ) * cos( radians( to_lat) ) * cos( radians( $fromlng ) - radians(to_lng) ) + sin( radians($fromlat) ) * sin( radians(to_lat) ) )) AS d2,
+(6371 * acos( cos( radians(to_lat) ) * cos( radians( from_lat ) ) * cos( radians( to_lng ) - radians(from_lng) ) + sin( radians(to_lat) ) * sin( radians(from_lat) ) )) AS a,
+(6371 * acos( cos( radians($tolat) ) * cos( radians( from_lat ) ) * cos( radians( $tolng ) - radians(from_lng) ) + sin( radians($tolat) ) * sin( radians(from_lat) ) )) AS d3,
+(6371 * acos( cos( radians($tolat) ) * cos( radians( to_lat) ) * cos( radians( $tolng ) - radians(to_lng) ) + sin( radians($tolat) ) * sin( radians(to_lat) ) )) AS d4
+FROM  `carpools` 
+Having (
+    ( d1+ d2) < ( 1.5 * a) 
+    AND
+    (d3 + d4) < ( 1.5 * a)
+    and 
+    (d1 < d3)
+)
+order by (d1+d4) limit 40";
+            $carpools = DB::select($q, []);
+            
             $view['carpools'] = $carpools;
             $view['from'] = $from;
             $view['to'] = $to;
+            $view['fromlat'] = $fromlat;
+            $view['tolat'] = $tolat;
+            $view['fromlng'] = $fromlng;
+            $view['tolng'] = $tolng;
         }
 
         return view('carpool.search', $view);
@@ -204,14 +231,14 @@ class HomeController extends Controller {
         $mobile = $request->get('mobile');
         $subject = $request->get('subject');
         $message = $request->get('message');
-        $arr=['name'=>$name, 'email'=>$email, 'mobile'=>$mobile, 'subject'=>$subject, 'message'=>$message];
+        $arr = ['name' => $name, 'email' => $email, 'mobile' => $mobile, 'subject' => $subject, 'message' => $message];
         Contact::firstOrCreate($arr);
         return response()->json(['status' => true, 'message' => 'Thanks for contact us']);
     }
 
     public function test() {
-       $fromLocation = Location::where('locality','New Delhi')->first();
-       echo $fromLocation->id;
+        $fromLocation = Location::where('locality', 'New Delhi')->first();
+        echo $fromLocation->id;
         die;
     }
 
@@ -270,12 +297,12 @@ class HomeController extends Controller {
         $endTime = time();
         echo "Total time spend is :" . ($endTime - $startTime);
     }
-    
+
     public function terms() {
         return view('carpool.terms', []);
     }
-    
-     public function cities() {
+
+    public function cities() {
         $locations = Location::get();
         $view = [
             'title' => 'Cities where Carpooling rideshare available',
@@ -285,28 +312,29 @@ class HomeController extends Controller {
         ];
         return view('carpool.cities', $view);
     }
+
     function sitemap() {
         $locations = Location::get();
-        $locationStr ='';
-        foreach($locations as $loc){
-            $carpool = Carpool::where('from_location_id',$loc->id)->orWhere('to_location_id',$loc->id)->orderBy('id', 'desc')->first();
-            if($carpool){
+        $locationStr = '';
+        foreach ($locations as $loc) {
+            $carpool = Carpool::where('from_location_id', $loc->id)->orWhere('to_location_id', $loc->id)->orderBy('id', 'desc')->first();
+            if ($carpool) {
                 $locationStr .= "<url>
                 <loc>http://www.sameroute.in/from-{$loc->locality}</loc>
-                <lastmod>".  substr($carpool->created_at, 0,10)."</lastmod>
+                <lastmod>" . substr($carpool->created_at, 0, 10) . "</lastmod>
                 <changefreq>weekly</changefreq>
                 <priority>.8</priority>
             </url>
             ";
             }
         }
-        foreach($locations as $loc){
-            foreach($locations as $loc1){
-                $carpool = Carpool::where('from_location_id',$loc->id)->Where('to_location_id',$loc1->id)->orderBy('id', 'desc')->first();
-                if($carpool){
+        foreach ($locations as $loc) {
+            foreach ($locations as $loc1) {
+                $carpool = Carpool::where('from_location_id', $loc->id)->Where('to_location_id', $loc1->id)->orderBy('id', 'desc')->first();
+                if ($carpool) {
                     $locationStr .= "<url>
                     <loc>http://www.sameroute.in/carpool-from-{$loc->locality}/to-{$loc1->locality}</loc>
-                    <lastmod>".  substr($carpool->created_at, 0,10)."</lastmod>
+                    <lastmod>" . substr($carpool->created_at, 0, 10) . "</lastmod>
                     <changefreq>weekly</changefreq>
                     <priority>.7</priority>
                 </url>
@@ -316,10 +344,11 @@ class HomeController extends Controller {
         }
         $carpool = Carpool::orderBy('id', 'desc')->first();
         $view = [
-            'homepage_last_modified'=>substr($carpool->created_at, 0,10),
-            'locations'=>$locationStr,
-            'xmlStart'=>"<?xml version='1.0' encoding='UTF-8'?>"
+            'homepage_last_modified' => substr($carpool->created_at, 0, 10),
+            'locations' => $locationStr,
+            'xmlStart' => "<?xml version='1.0' encoding='UTF-8'?>"
         ];
         return view('carpool.sitemap', $view);
     }
+
 }
