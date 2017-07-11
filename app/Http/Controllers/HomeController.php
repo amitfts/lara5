@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Location;
 use App\Carpool;
 use App\Contact;
+use App\Search;
 use DB;
 
 class HomeController extends Controller {
@@ -157,6 +158,29 @@ class HomeController extends Controller {
                 'metaDesc' => $carpool->details,
                 'carpool' => $carpool
             ];
+            if ($carpool->from_lat && $carpool->from_lng && $carpool->to_lat && $carpool->to_lng) {
+
+                $q = "SELECT *,
+                (6371 * acos( cos( radians($carpool->from_lat) ) * cos( radians( from_lat ) ) * cos( radians( $carpool->from_lng ) - radians(from_lng) ) + sin( radians($carpool->from_lat) ) * sin( radians(from_lat) ) )) AS d1,
+                (6371 * acos( cos( radians($carpool->from_lat) ) * cos( radians( to_lat) ) * cos( radians( $carpool->from_lng ) - radians(to_lng) ) + sin( radians($carpool->from_lat) ) * sin( radians(to_lat) ) )) AS d2,
+                (6371 * acos( cos( radians(to_lat) ) * cos( radians( from_lat ) ) * cos( radians( to_lng ) - radians(from_lng) ) + sin( radians(to_lat) ) * sin( radians(from_lat) ) )) AS a,
+                (6371 * acos( cos( radians($carpool->to_lat) ) * cos( radians( from_lat ) ) * cos( radians( $carpool->to_lng ) - radians(from_lng) ) + sin( radians($carpool->to_lat) ) * sin( radians(from_lat) ) )) AS d3,
+                (6371 * acos( cos( radians($carpool->to_lat) ) * cos( radians( to_lat) ) * cos( radians( $carpool->to_lng ) - radians(to_lng) ) + sin( radians($carpool->to_lat) ) * sin( radians(to_lat) ) )) AS d4
+                FROM  `carpools` 
+                where id<> $carpool->id
+                Having (
+                    ( d1+ d2) < (case when(a<30 ) then ( 1.5 * a) else (1.25*a) end )
+                    AND
+                    (d3 + d4) < (case when(a<30 ) then ( 1.5 * a) else (1.25*a) end )
+                    and 
+                    (d1 < d3)
+                )
+                order by (d1+d4) limit 10";
+                $carpools = DB::select($q, []);
+                $view['from'] = $carpool->from_location;
+                $view['to'] = $carpool->to_location;
+                $view['carpools'] = $carpools;
+            }
             return view('carpool.details', $view);
         } else {
             abort(404, 'Page not found');
@@ -187,7 +211,7 @@ class HomeController extends Controller {
                 'metaKey' => 'Carpool from ' . $from . ' to ' . $to . ', ',
                 'metaDesc' => 'People who are travel from ' . $from . ' to ' . $to . ' or near by locations. ',
             ];
-        $q= "SELECT *,
+            $q = "SELECT *,
 (6371 * acos( cos( radians($fromlat) ) * cos( radians( from_lat ) ) * cos( radians( $fromlng ) - radians(from_lng) ) + sin( radians($fromlat) ) * sin( radians(from_lat) ) )) AS d1,
 (6371 * acos( cos( radians($fromlat) ) * cos( radians( to_lat) ) * cos( radians( $fromlng ) - radians(to_lng) ) + sin( radians($fromlat) ) * sin( radians(to_lat) ) )) AS d2,
 (6371 * acos( cos( radians(to_lat) ) * cos( radians( from_lat ) ) * cos( radians( to_lng ) - radians(from_lng) ) + sin( radians(to_lat) ) * sin( radians(from_lat) ) )) AS a,
@@ -195,15 +219,14 @@ class HomeController extends Controller {
 (6371 * acos( cos( radians($tolat) ) * cos( radians( to_lat) ) * cos( radians( $tolng ) - radians(to_lng) ) + sin( radians($tolat) ) * sin( radians(to_lat) ) )) AS d4
 FROM  `carpools` 
 Having (
-    ( d1+ d2) < ( 1.5 * a) 
+    ( d1+ d2) < (case when(a<30 ) then ( 1.5 * a) else (1.25*a) end )
     AND
-    (d3 + d4) < ( 1.5 * a)
+    (d3 + d4) < (case when(a<30 ) then ( 1.5 * a) else (1.25*a) end )
     and 
     (d1 < d3)
 )
 order by (d1+d4) limit 40";
             $carpools = DB::select($q, []);
-            
             $view['carpools'] = $carpools;
             $view['from'] = $from;
             $view['to'] = $to;
@@ -211,6 +234,15 @@ order by (d1+d4) limit 40";
             $view['tolat'] = $tolat;
             $view['fromlng'] = $fromlng;
             $view['tolng'] = $tolng;
+            if (count($carpools)) {
+                if (Search::where('from_loc', $from)->where('to_loc', $to)->count() == 0) {
+                    $searchesArr = ['from_loc' => $from, 'from_lat' => $fromlat,
+                        'from_lng' => $fromlng,
+                        'to_loc' => $to, 'to_lat' => $tolat, 'to_lng' => $tolng
+                    ];
+                    Search::create($searchesArr);
+                }
+            }
         }
 
         return view('carpool.search', $view);
@@ -341,6 +373,16 @@ order by (d1+d4) limit 40";
                 ";
                 }
             }
+        }
+        $searches = Search::all();
+        foreach ($searches as $search) {
+            $locationStr .= "<url>
+                    <loc>http://www.sameroute.in/search?from={$search->from_loc}&to={$search->to_loc}&fromlat={$search->from_lat}&fromlng={$search->from_lng}&tolat={$search->to_lat}&tolng={$search->to_lng}</loc>
+                    <lastmod>" . substr($search->created_at, 0, 10) . "</lastmod>
+                    <changefreq>weekly</changefreq>
+                    <priority>.7</priority>
+                </url>
+                ";
         }
         $carpool = Carpool::orderBy('id', 'desc')->first();
         $view = [

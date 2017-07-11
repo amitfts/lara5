@@ -121,6 +121,9 @@
                     </div>
                 </div>
             </div>
+            @if(isset($carpools))
+                 @include('carpool.nearbytable')
+            @endif
         </div>
     </div>
 </div>
