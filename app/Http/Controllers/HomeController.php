@@ -148,7 +148,7 @@ class HomeController extends Controller {
     public function details($carpoolId, $from, $to) {
         $carpool = Carpool::find($carpoolId);
         if ($carpool && strtolower($carpool->from_location) == urldecode(str_replace('_', '-', $from))) {
-            $strFrmTo = str_replace(',', '-', 'from ' . $carpool->from_location . ' to ' . $carpool->to_location);
+            $strFrmTo =  'from ' . $carpool->from_location . ' to ' . $carpool->to_location;
             $name = $carpool->user->name;
             $key = '';
 

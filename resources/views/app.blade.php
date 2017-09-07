@@ -7,7 +7,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description"  content="@if(isset($metaDesc)){{$metaDesc}}@endif" />
         <meta name="keywords"  content="@if(isset($metaKey)){{$metaKey}}@endif" />
-        <meta property="og:url" content="{{Request::url()}}" />
         <meta property="og:type" content="website" />
         <meta property="fb:app_id" content="994531767281439" />
         <meta property="og:title" content="@if(isset($title)){{$title}}@else Sameroute.in @endif" />
